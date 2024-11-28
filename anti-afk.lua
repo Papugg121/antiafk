@@ -51,19 +51,20 @@ Watermark.TextScaled = true
 Watermark.TextTransparency = 0.2
 
 local antiAfkEnabled = true
-
 local VirtualUser = game:GetService("VirtualUser")
-local function EnableAntiAfk()
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+
+local function StartAntiAfkLoop()
+    while true do
         if antiAfkEnabled then
-            VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-            wait(1)
-            VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton1(Vector2.new(0, 0))
+            print("[Anti-AFK] Simulated click.")
         end
-    end)
+        task.wait(10)
+    end
 end
 
-EnableAntiAfk()
+spawn(StartAntiAfkLoop)
 
 ToggleButton.MouseButton1Click:Connect(function()
     antiAfkEnabled = not antiAfkEnabled
